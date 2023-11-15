@@ -11,4 +11,4 @@ app = fastapi.FastAPI()
 
 @app.get("/")
 async def greet_readers() -> Message:
-    return Message(message="Welcome to my awsome presentation!")
+    return Message(message="Welcome to my awesome presentation!")
