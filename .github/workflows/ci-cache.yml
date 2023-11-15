@@ -1,0 +1,34 @@
+name: CI cache advance
+
+on: workflow_dispatch
+
+jobs:
+  ci:
+    name: Running CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' 
+
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-tests-${{ env.pythonLocation }}-${{ hashFiles('requirements.txt', 'requirements-minimal.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-tests-${{ env.pythonLocation }}-
+            ${{ runner.os }}-tests-
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -r requirements.txt
+
+      - name: Lint
+        run: ruff .
+
+      - name: Run tests
+        run: pytest -v
