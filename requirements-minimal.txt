@@ -4,3 +4,4 @@ httpx
 ruff
 black
 pytest
+pandas[performance, computation, plot, output-formatting]
